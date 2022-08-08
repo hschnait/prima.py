@@ -29,7 +29,7 @@ def git_version():
 
 
 __version__ = git_version()
-sppv.version[:] = __version__
+sppv.version = str(__version__).ljust(512)
 
 def carp(thing):
     if verbose and isinstance(thing, Exception):
@@ -37,7 +37,7 @@ def carp(thing):
     else:
         if isinstance(thing, tuple):
             thing = ' '.join(str(x) for x in thing)
-        print >>sys.stderr, "prima.py:", thing
+        print("prima.py:", thing, file=sys.stderr)
 
 def croak(thing, status=1):
     carp(thing)
@@ -47,7 +47,7 @@ def croak(thing, status=1):
 def open_w_error(filename, mode="r"):
     try:
         f = open(filename, mode)
-    except IOError, err:
+    except IOError as err:
         yield None, err
     else:
         try:
@@ -78,71 +78,71 @@ def find_reverse(lefi, string):
     else:              return None
 
 ### The command line will be printed as a comment in the PS ###
-sppv.cmdline[:] = ' '.join(sys.argv)
+sppv.cmdline = ' '.join(sys.argv).ljust(512)
 
 ### Declare option related variables/functions ###
 bandfile = None
 def bandname(x):
     global bandfile
-    print>>log, 'set klist file = ‘'       +x+'’'
+    print('set klist file = ‘'       +x+'’', file=log)
     bandfile            = x
     sppv.bandname[:]    = x
 def efermi(x):
-    print>>log, 'set Fermi energy = ‘'     +x+'’ Ryd'
+    print('set Fermi energy = ‘'     +x+'’ Ryd', file=log)
     sppv.efermi         = x
 def emin(x):
-    print>>log, 'set bottom energy = ‘'    +x+'’ eV'
+    print('set bottom energy = ‘'    +x+'’ eV', file=log)
     sppv.emin           = x
 def emax(x):
-    print>>log, 'set top energy = ‘'       +x+'’ eV'
+    print('set top energy = ‘'       +x+'’ eV', file=log)
     sppv.emax           = x
 def majortics(x):
-    print>>log, 'set major tics every = ‘' +x+'’ eV'
+    print('set major tics every = ‘' +x+'’ eV', file=log)
     sppv.majorticks     = x
 def minortics(x):
-    print>>log, 'set minor tics = ‘'       +x+'’ per major tic interval'
+    print('set minor tics = ‘'       +x+'’ per major tic interval', file=log)
     sppv.minorticks     = x
 def xsize(x):
-    print>>log, 'set x-size = ‘'           +x+'’ pt'
+    print('set x-size = ‘'           +x+'’ pt', file=log)
     sppv.xsize          = x
 def ysize(x):
-    print>>log, 'set y-size = ‘'           +x+'’ pt'
+    print('set y-size = ‘'           +x+'’ pt', file=log)
     sppv.ysize          = x
 def textsize(x):
-    print>>log, 'set font size = ‘'        +x+'’ pt'
+    print('set font size = ‘'        +x+'’ pt', file=log)
     sppv.textsize       = x
 def fontname(x):
-    print>>log, 'set font = ‘'             +x+'’'
-    sppv.fontname[:]    = x
+    print('set font = ‘'             +x+'’', file=log)
+    sppv.fontname    = x.ljust(512)
 def legend(x):
-    print>>log, 'set write legend'
+    print('set write legend', file=log)
     sppv.writelegend    = True
 def nolegend(x):
-    print>>log, 'unset legend'
+    print('unset legend', file=log)
     sppv.writelegend    = False
 def noklines(x):
-    print>>log, 'unset k-lines'
+    print('unset k-lines', file=log)
     sppv.writeklines    = False
 def klines(x):
-    print>>log, 'set draw k-lines'
+    print('set draw k-lines', file=log)
     sppv.writeklines    = True
 def noklabels(x):
-    print>>log, 'unset k-labels'
+    print('unset k-labels', file=log)
     sppv.writeklabels   = False
 def klabels(x):
-    print>>log, 'set write k-labels'
+    print('set write k-labels', file=log)
     sppv.writeklabels   = True
 def nofermi(x):
-    print>>log, 'unset Fermi energy line'
+    print('unset Fermi energy line', file=log)
     sppv.writefermiline = False
 def fermi(x):
-    print>>log, 'set draw Fermi energy line'
+    print('set draw Fermi energy line', file=log)
     sppv.writefermiline = True
 def axes_thk(x):
-    print>>log, 'set axis thickness = ‘'+x+'’ pt'
+    print('set axis thickness = ‘'+x+'’ pt', file=log)
     sppv.axesthickness  = x
 def base_thk(x):
-    print>>log, 'set line base thickness = ‘'+x+'’ pt'
+    print('set line base thickness = ‘'+x+'’ pt', file=log)
     sppv.basethickness  = x
 
 qtlfile  = None
@@ -152,38 +152,38 @@ def qtlname(x):
     qtlfile1        = qtlfile
     qtlfile         = x
     sppv.qtlname[:] = x
-    print>>log, 'set qtl file = ‘'+x+'’'
+    print('set qtl file = ‘'+x+'’', file=log)
 
 def print_version(x):
-    print 'prima.py version ' + __version__
+    print('prima.py version ' + __version__)
 
     sys.exit()
 
 def print_help(x):
-    print "USAGE: prima.py [OPTIONS] [IATM:IORB:R,G,B:THCK:LEG ...]"
-    print "       (generate plot)"
-    print "   OR: prima.py [-q QTL_BAND] [-s STRUCT]"
-    print "       (print available atom and orbital names)"
-    print
-    print "   IATM: atom number(s) or name(s) N[&M...]"
-    print "   IORB: orbital character number(s) or name(s) N[&M...]"
-    print "         default: tot"
-    print "  R,G,B: color"
-    print "         default: 0,0,0 (black)"
-    print "   THCK: line thickness increment"
-    print "         default: 0 (no “fat bands”)"
-    print "    LEG: legend entry"
-    print "         default: IATM-IORB (if -L option given)"
-    print
-    print "OPTIONS:"
+    print("USAGE: prima.py [OPTIONS] [IATM:IORB:R,G,B:THCK:LEG ...]")
+    print("       (generate plot)")
+    print("   OR: prima.py [-q QTL_BAND] [-s STRUCT]")
+    print("       (print available atom and orbital names)")
+    print()
+    print("   IATM: atom number(s) or name(s) N[&M...]")
+    print("   IORB: orbital character number(s) or name(s) N[&M...]")
+    print("         default: tot")
+    print("  R,G,B: color")
+    print("         default: 0,0,0 (black)")
+    print("   THCK: line thickness increment")
+    print("         default: 0 (no “fat bands”)")
+    print("    LEG: legend entry")
+    print("         default: IATM-IORB (if -L option given)")
+    print()
+    print("OPTIONS:")
 
     for o in [o for o in prima_options if o[3] is not None]:
-        print "\t-" + o[0] + ", --" + o[1] + "\t" + o[3]
+        print("\t-" + o[0] + ", --" + o[1] + "\t" + o[3])
     for o in [o for o in sppv_options  if o[3] is not None]:
-        print "\t-" + o[0] + ", --" + o[1] + "\t" + o[3]
-    print
-    print "Boolean options as listed negate the defaults; long options to reinstate"
-    print "the defaults (e.g. ‘--no-legend’, ‘--k-labels’) are also valid."
+        print("\t-" + o[0] + ", --" + o[1] + "\t" + o[3])
+    print()
+    print("Boolean options as listed negate the defaults; long options to reinstate")
+    print("the defaults (e.g. ‘--no-legend’, ‘--k-labels’) are also valid.")
 
     sys.exit()
 
@@ -192,11 +192,11 @@ mix  = False
 def do_up(x):
     global spin
     spin='up'
-    print>>log, 'set spin = ‘'+spin+'’'
+    print('set spin = ‘'+spin+'’', file=log)
 def do_dn(x):
     global spin
     spin='dn'
-    print>>log, 'set spin = ‘'+spin+'’'
+    print('set spin = ‘'+spin+'’', file=log)
 def no_spin(x):
     global spin
     spin=''
@@ -204,14 +204,14 @@ def do_mix(x):
     global spin, mix
     spin = 'updn'
     mix  = True
-    print>>log, 'mix spins'
-    print>>log, 'set spin = ‘'+spin+'’'
+    print('mix spins', file=log)
+    print('set spin = ‘'+spin+'’', file=log)
 def do_join(x):
     global spin, mix
     spin = 'updn'
     mix  = False
-    print>>log, 'join spins'
-    print>>log, 'set spin = ‘'+spin+'’'
+    print('join spins', file=log)
+    print('set spin = ‘'+spin+'’', file=log)
 
 class nofile(object):
     def write(self, string):
@@ -223,49 +223,49 @@ def do_verbose(x):
     global verbose, log
     verbose = True
     log = sys.stderr
-    print>>log, 'set verbose'
+    print('set verbose', file=log)
 def no_verbose(x):
     global verbose, log
     verbose = False
-    print>>log, 'unset verbose'
+    print('unset verbose', file=log)
     log = nofile()
 
 outsuffix = None
 def suffixname(x):
     global outsuffix
     outsuffix = x
-    print>>log, 'set output suffix = ‘'+x+'’'
-    print>>log
+    print('set output suffix = ‘'+x+'’', file=log)
+    print(file=log)
 
 outfile = None
 def outname(x):
     global outfile, outsuffix
     outfile = x
     outsuffix = None           # delete outsuffix for explicit outfile
-    print>>log, 'set output file = ‘'+x+'’'
+    print('set output file = ‘'+x+'’', file=log)
 
 structfile = None
 def structname(x):
     global structfile
     structfile = x
-    print>>log, 'set struct = ‘'+x+'’'
+    print('set struct = ‘'+x+'’', file=log)
 
 scffile = None
 def scfname(x):
     global scffile
     scffile = x
-    print>>log, 'set scf file = ‘'+x+'’'
+    print('set scf file = ‘'+x+'’', file=log)
 
 case = os.getcwd().split(os.sep)[-1]
-print>>log, case
+print(case, file=log)
 def casename(x):
     global case
     case = x
-    print>>log, 'set case = ‘'+x+'’'
+    print('set case = ‘'+x+'’', file=log)
 
 def confname(x): # this is a no-op because config files are special
     # but it is a convenient place to verbosely echo config files
-    print>>log, 'config file ‘'+x+'’read'
+    print('config file ‘'+x+'’read', file=log)
     
 
 sppv_options = [
@@ -326,7 +326,7 @@ for o in sppv_options + prima_options:
         opt_dict[o[0][0]] = o
         shopts   +=  o[0]
 
-print>>log, 'Parsing option arguments …'
+print('Parsing option arguments …', file=log)
 
 try:
     (opts, args) = getopt.gnu_getopt(sys.argv[1:], shopts, longopts)
@@ -340,7 +340,7 @@ for (o, a) in opts:
     if o not in ['-C', '--config-file']: continue
 
     try:
-        c = open(a, 'U')
+        c = open(a)
 
         for line in c:
             if skipre.match(line): continue
@@ -379,10 +379,10 @@ if args:
         try:
             if scffile is None: scffile = case + '.scf'
 
-            print>>log, 'no -F option, will try to find Fermi energy in ‘'\
-                         +scffile+'’'
+            print('no -F option, will try to find Fermi energy in ‘'\
+                         +scffile+'’', file=log)
 
-            with open(scffile, 'U') as scf:
+            with open(scffile) as scf:
                 scf.seek(0, os.SEEK_END)
 
                 line = find_reverse(scf, ':FER')
@@ -398,11 +398,11 @@ if args:
         except Exception as e:
             croak(('error trying to fetch Fermi energy:', e))
 
-    print>>log, 'Fermi energy is EF =', sppv.efermi, 'Ryd'
+    print('Fermi energy is EF =', sppv.efermi, 'Ryd', file=log)
 
 ## set defaults for qtlfile, bandname, struct unless set
-print>>log
-print>>log, 'Files used:'
+print(file=log)
+print('Files used:', file=log)
 if qtlfile    is None:
     s = spin
     t = 'up'
@@ -414,34 +414,34 @@ if qtlfile    is None:
         qtlfile  = case + '.qtl' + s
         qtlfile1 = case + '.qtl' + t
 
-    sppv.qtlname[:] = qtlfile
+    sppv.qtlname = qtlfile.ljust(512)
 
     if spin == 'updn':
-        print>>log, '   qtl1= ‘'+qtlfile1+'’'
-    print>>log,     '   qtl = ‘'+qtlfile +'’'
+        print('   qtl1= ‘'+qtlfile1+'’', file=log)
+    print('   qtl = ‘'+qtlfile +'’', file=log)
 elif spin=='updn' and  qtlfile1 is None:
     croak('need 0 or 2 qtl files in updn mode, not 1')
 
 if bandfile   is None:
     bandfile         = case + '.klist_band'
-    sppv.bandname[:] = bandfile
-    print>>log, '   klist_band = ‘'+bandfile+'’'
+    sppv.bandname = bandfile.ljust(512)
+    print('   klist_band = ‘'+bandfile+'’', file=log)
 if structfile is None:
     structfile = case + '.struct'
-    print>>log, '   struct = ‘'+structfile+'’'
+    print('   struct = ‘'+structfile+'’', file=log)
 
 ## set outfile from outsuffix if set
 if outsuffix is not None:
     outfile = case + outsuffix
 
 if outfile is not None:
-    print>>log, '   output to ‘'+outfile+'’'
+    print('   output to ‘'+outfile+'’', file=log)
 
 ### Read QTL file for orbital character info ###
-print>>log
-print>>log, 'Reading qtl file …'
+print(file=log)
+print('Reading qtl file …', file=log)
 try:
-    qtl     = open(qtlfile, 'U')
+    qtl     = open(qtlfile)
 except IOError as e:
     croak(('error opening qtl file:', e))
 
@@ -452,8 +452,8 @@ have_orbs = []
 for line in qtl:
     m = jatomre.match(line)
     if m:
-        print>>log
-        print>>log, 'Next atom'
+        print(file=log)
+        print('Next atom', file=log)
         o = {}
 
         for i,name in enumerate(m.group(1).split(',')):
@@ -468,7 +468,7 @@ for line in qtl:
                 '3': 'F'
                 }.get(name, name).lower()
             o[name] = i
-            print>>log, '   found orbital', name, '=>', i
+            print('   found orbital', name, '=>', i, file=log)
 
         have_orbs.append(o)
 
@@ -487,9 +487,9 @@ have_orbs.append({'tot' : 0})   # interstitial
 have_atoms = { 'all': set() }
 
 try:
-    print>>log
-    print>>log, 'Reading struct file …'
-    struct = open(structfile, 'U')
+    print(file=log)
+    print('Reading struct file …', file=log)
+    struct = open(structfile)
 
     atomre = re.compile('(.*?) *NPT=')
     symre  = re.compile('[a-zA-Z]+')
@@ -523,7 +523,7 @@ try:
             # 'all'
             have_atoms['all'].add(iat)
 
-            print>>log, '   found atom', iat, '<=', aname, asym, az
+            print('   found atom', iat, '<=', aname, asym, az, file=log)
 
             iat += 1
 
@@ -558,10 +558,10 @@ def parsecolor(cc):
     cc = cc.strip()
 
     try:
-        c = numpy.array(map(float, cc.split(',')))
+        c = numpy.array(list(map(float, cc.split(','))))
 
         if c.size == 1: c = c.repeat(3)
-        if c.size != 3: raise StandardError()
+        if c.size != 3: raise Exception()
 
         return c * fact
     except ValueError: pass
@@ -574,8 +574,8 @@ def parsecolor(cc):
     c = webcolors.name_to_rgb(cc)
     return numpy.array(c)/255. * fact
 
-print>>log
-print>>log, 'Parsing non-option arguments …'
+print(file=log)
+print('Parsing non-option arguments …', file=log)
 
 for a in args:
     tok = a.split(':', 4)
@@ -585,7 +585,7 @@ for a in args:
 
     tok += [''] * (5 - len(tok))
 
-    print>>log, '   found tokens', tok,
+    print('   found tokens', tok, end=' ', file=log)
 
     (aa, oo, cc, t, l) = tok[:5]
 
@@ -601,7 +601,7 @@ for a in args:
     # transform color arg to array
     try:
         c = parsecolor(cc)
-    except StandardError:
+    except Exception:
         croak(('invalid color spec:', cc))
 
     # store legend entry -- there should be one entry for each command
@@ -610,7 +610,7 @@ for a in args:
         legnames .append(l)
         legcolors.append(c)
 
-    print>>log, '=> [', aa, oo, c, t, l, ']'
+    print('=> [', aa, oo, c, t, l, ']', file=log)
 
     # now expand atom / orbital args
     aa = collections.deque(combinator.split(aa))
@@ -670,15 +670,14 @@ for a in args:
             clrs.append(c)
             thks.append(float(t))
 
-            print>>log, \
-                '      adding atom %i, orb %i, color %s, thickness %g' \
-                %(1+2*iat+add, 1 + iorb, c, float(t))
+            print('      adding atom %i, orb %i, color %s, thickness %g' \
+                %(1+2*iat+add, 1 + iorb, c, float(t)), file=log)
 
-print>>log
-print>>log, "Atoms   :", atms
-print>>log, "Orbitals:", orbs
-print>>log, "Colors  :", clrs
-print>>log, "Thickn's:", thks
+print(file=log)
+print("Atoms   :", atms, file=log)
+print("Orbitals:", orbs, file=log)
+print("Colors  :", clrs, file=log)
+print("Thickn's:", thks, file=log)
 
 sppv.orbcolors = numpy.array(clrs).T
 sppv.atomsorbs = numpy.array((atms, orbs))
@@ -692,35 +691,36 @@ if sppv.writelegend:
     # legend entry of one character is given
     sppv.legend = ''.join(legnames) + ' '
 
-    sppv.legentries = numpy.cumsum(map(len, legnames))
+    sppv.legentries = numpy.cumsum(list(map(len, legnames)))
 
 ## no arguments: print available characters
 if not atms:
-    print>>log
-    print>>log, 'No non-option arguments: print available characters'
+    print(file=log)
+    print('No non-option arguments: print available characters', file=log)
 
-    print 'prima.py', __version__, 'using', qtlfile, 'and', structfile
-    print
+    print('prima.py', __version__, 'using', qtlfile, 'and', structfile)
+    print()
     for a,o in enumerate(have_orbs, start=1):
-        print a, ':',
-        for io in sorted(o.iteritems(), cmp=lambda a,b: a[1]-b[1]):
-            print repr(io[0]) + ':' + repr(io[1]+1) + ',',
-        else: print
-    print
-    for atn,iat in sorted(have_atoms.iteritems()):
+        print(a, ':', end=' ')
+        #for io in sorted(iter(o.items()), cmp=lambda a,b: a[1]-b[1]):
+        for io in sorted(iter(o.items()), key=lambda a: a[1]):
+            print(repr(io[0]) + ':' + repr(io[1]+1) + ',', end=' ')
+        else: print()
+    print()
+    for atn,iat in sorted(have_atoms.items()):
         atn = atn[0].upper() + atn[1:]
-        print atn, '=>', ','.join(map(repr, iat))
+        print(atn, '=>', ','.join(map(repr, iat)))
 
-    print>>log
-    print>>log, 'All done.'
+    print(file=log)
+    print('All done.', file=log)
     sys.exit()
 
 ### Real Work ###
 
 ## In ‘updn’ mode, open a pipe to paste the two qtl files together.  
 if spin=='updn':
-    print>>log
-    print>>log, 'Opening pipe to paste together ‘up’ and ‘dn’ qtl files …'
+    print(file=log)
+    print('Opening pipe to paste together ‘up’ and ‘dn’ qtl files …', file=log)
 
     warnings.simplefilter('ignore')
     qtlpipe = os.tempnam(None, 'udqtl')
@@ -737,10 +737,10 @@ if spin=='updn':
                 natre = re.compile('NAT\s*=\s*(\d+)')
                 l1=''
                 while 'BAND' not in l1:
-                    print>>qtl, l1,
+                    print(l1, end=' ', file=qtl)
 
                     if 'JATOM' in l1:
-                        print>>qtl, l2,
+                        print(l2, end=' ', file=qtl)
 
                     m = natre.match(l1)
                     if m:
@@ -760,12 +760,12 @@ if spin=='updn':
 
                 # header done, l1 and l2 contain “BAND 1”; print extra
                 # line for the extra interstitial
-                print>>qtl, 'JATOM X interstitial'
+                print('JATOM X interstitial', file=qtl)
 
                 nk=0
                 while l1 and l2:
                     nk += 1
-                    print>>qtl, l1,
+                    print(l1, end=' ', file=qtl)
 
                     l1 = q1.readline()
 
@@ -773,18 +773,18 @@ if spin=='updn':
                     if mix:
                         l2 = q2.readline()
                         if not l2.startswith(' BAND'):
-                            print>>qtl, l2,
+                            print(l2, end=' ', file=qtl)
                     else:
                         if not l1 or l1.startswith(' BAND'):
-                            print>>qtl, l2,
+                            print(l2, end=' ', file=qtl)
                             for k in range(nk-1):
                                 l2 = q2.readline()
-                                print>>qtl, l2,
-                                print>>qtl, l2[0:14], ' 0'*20
+                                print(l2, end=' ', file=qtl)
+                                print(l2[0:14], ' 0'*20, file=qtl)
                             nk=0
                             l2 = q2.readline()
                         else:
-                            print>>qtl, l1[0:14], ' 0'*20
+                            print(l1[0:14], ' 0'*20, file=qtl)
 
 
             os.unlink(qtlpipe)
@@ -792,28 +792,28 @@ if spin=='updn':
     except EnvironmentError as e:
         croak(('error opening pipe for --updn qtl:', e))
 
-    print>>log, 'Using named pipe ‘'+qtlpipe+'’as qtl file'
+    print('Using named pipe ‘'+qtlpipe+'’as qtl file', file=log)
 
 ## Redirect STDOUT if necessary -- need to use low-level I/O to
 ## propagate change to Fortran
 if outfile not in [None, '-']:
-    print>>log
-    print>>log, 'Redirecting STDOUT for Fortran'
+    print(file=log)
+    print('Redirecting STDOUT for Fortran', file=log)
     os.close(1)
-    os.umask(~0644)
+    os.umask(~0o644)
     # should open on 1 (fingers crossed)
     fid = os.open(outfile, os.O_WRONLY|os.O_CREAT|os.O_TRUNC)
     if fid != 1:
         croak(('Redirecting STDOUT did not work -- opened on', fid,
                'instead of 1'))
 
-print>>log
-print>>log, 'Handing over to Fortran …'
+print(file=log)
+print('Handing over to Fortran …', file=log)
 
 spaghettiprimavera()
 
-print>>log
-print>>log, 'All done.'
+print(file=log)
+print('All done.', file=log)
 
 
 ## Time-stamp: <2015-09-22 16:46:36 assman@faepop36.tu-graz.ac.at>

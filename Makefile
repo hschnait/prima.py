@@ -14,7 +14,7 @@ else ifneq "$(findstring intel,$(FC))" ""
 	FFLAGS := -O2 $(FFLAGS)
 endif
 
-F2PY ?= f2py --quiet --fcompiler=$(FC)
+F2PY ?= f2py3  --fcompiler=$(FC)
 
 all: sppv.so prima.py
 
@@ -22,7 +22,7 @@ sppv.so: SpaghettiPrimavera.f90
 	$(F2PY) -c -m sppv --f90flags="$(FFLAGS)" \
 		only: spaghettiprimavera sppv_data \
 		      charactertorgbcolor charactertothickness \
-		: SpaghettiPrimavera.f90
+		: SpaghettiPrimavera.f90 
 
 clean:
 	rm -f sppv.so *.mod *__genmod.f90 *.pyc
